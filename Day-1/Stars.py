@@ -2,7 +2,7 @@ import time
 
 def day_():
     path = "data.txt"
-    path = "test-data.txt"
+    #path = "test-data.txt"
 
     start_time = time.perf_counter()
     data = get_data(path)
@@ -26,19 +26,43 @@ def day_():
         print(f'Star 2 answer: {ans2}')
 
 def get_data(path):
-    data = []
+    data = [[],[]]
     with open(path) as f:
         rows = f.read().splitlines()
         for row in rows:
-            print(row)
-            data.append(row)
+            row = list(map(int, row.split("   ")))
+            #print(row)
+            data[0].append(row[0])
+            data[1].append(row[1])
+        #print(data)
     return data
     
 def star1(data):
-    return 0
+    data[0].sort()
+    data[1].sort()
+    data2 = zip(data[0], data[1])
+    d = sum([abs(e1-e2) for (e1,e2) in data2])
+    #print(d)
+    return d
 
 def star2(data):
-    return 0
+    total = 0
+    count_left = count_map(data[0])
+    count_right = count_map(data[1])
+    for number, count in count_left.items():
+        if number not in count_right:
+            continue
+        total += number*count*count_right[number]
+    return total
+
+def count_map(l:list[int]) -> dict:
+    count_dict = {}
+    for number in l:
+        if number not in count_dict:
+            count_dict[number] = 1
+        else:
+            count_dict[number] += 1
+    return count_dict
 
 def main():
     import cProfile
