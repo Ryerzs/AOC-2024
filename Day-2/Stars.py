@@ -3,7 +3,7 @@ from copy import deepcopy
 
 def day_():
     path = "data.txt"
-    path = "test-data.txt"
+    # path = "test-data.txt"
 
     start_time = time.perf_counter()
     data = get_data(path)
@@ -62,42 +62,16 @@ def safe_decrease(l:list[int]) -> bool:
 def star2(data):
     safe = 0
     for report in data:
-        if safe_increase_dampener(report) or safe_decrease_dampener(report):
+        if safe_dampener(report):
             safe +=1
     return safe
 
-def safe_increase_dampener(l:list[int]) -> bool:
-    failed = 0
-    indices = [i for i in range(len(l))]
-    #Behöver bara kika fram tills len-2. Om vi klarar oss dit utan problem kan vi skippa sista siffran.
-    #Annars behöver vi hoppa en siffra och då är det fallet när vi itererar till len-1
-    for i in range(len(l)-2):
-        if l[indices[i]] >= l[indices[i+1]]:
-            failed += 1
-            indices[i+1] = indices[i]
-        elif l[indices[i]] < l[indices[i+1]] - 3:
-            failed += 1
-            indices[i+1] = indices[i]
-        if failed >= 2:
-            return False
-    return True
-
-def safe_decrease_dampener(l:list[int]) -> bool:
-    failed = 0
-    indices = [i for i in range(len(l))]
-    #Behöver bara kika fram tills len-2. Om vi klarar oss dit utan problem kan vi skippa sista siffran.
-    #Annars behöver vi hoppa en siffra och då är det fallet när vi itererar till len-1
-    for i in range(len(l)-2):
-        if l[indices[i]] <= l[indices[i+1]]:
-            failed += 1
-            # Byt ut nästa med nuvarande
-            indices[i+1] = indices[i]
-        elif l[indices[i]] > l[indices[i+1]] + 3:
-            failed += 1
-            indices[i+1] = indices[i]
-        if failed >= 2:
-            return False
-    return True
+def safe_dampener(l:list[int]) -> bool:
+    for j in range(len(l)):
+        new_list = l[0:j] + l[(j+1):]
+        if safe_increase(new_list) or safe_decrease(new_list):
+            return True
+    return False
 
 def main():
     import cProfile
