@@ -15,6 +15,11 @@ def day_():
     ans2 = star2(data)
     time3 = time.perf_counter()
 
+    data = get_data("data_brute2.txt")
+
+    ans3 = star3(data)
+    #time3 = time.perf_counter()
+
     load_time = time1 - start_time
     star1_time = time2 - time1
     star2_time = time3 - time2
@@ -24,14 +29,15 @@ def day_():
         print(f'Star 2 time: {star2_time}')
         print(f'Star 1 answer: {ans1}')
         print(f'Star 2 answer: {ans2}')
+        print(f'Star 3 answer: {ans3}')
 
 def get_data(path):
-    data = []
+    data = [""]
     with open(path) as f:
         rows = f.read().splitlines()
         for row in rows:
             print(row)
-            data.append(row)
+            data[0] = data[0] + row
     return data
     
 def star1(data):
@@ -45,6 +51,12 @@ def star1(data):
             if not potential[0].isdigit() or not potential[1].isdigit():
                 continue
             total += int(potential[0])*int(potential[1])
+    return total
+
+def star3(data):
+    total = 0
+    for line in data:
+        total += get_mult_from_string(line)
     return total
 
 def star2(data):
