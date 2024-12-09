@@ -30,7 +30,7 @@ def get_data(path):
     with open(path) as f:
         rows = f.read().splitlines()
         for row in rows:
-            print(row)
+            #print(row)
             data.append(row)
     return data
     
@@ -51,12 +51,8 @@ def star2(data):
     total = 0
     for line in data:
         do = line.split("do()")
-        print(len(do))
-        print("**********")
         for d in do:
-            l = d.split("don't()")
-            print(len(l))
-            l = l[0]
+            l = d.split("don't()")[0]
             total += get_mult_from_string(l)
     return total
 
@@ -66,7 +62,8 @@ def get_mult_from_string(s:str) -> int:
     # print(l)
     for m in mul:
         potential = m.split(")")[0].split(",")
-        if len(potential) < 2:
+        #print(potential)
+        if len(potential) != 2:
             continue
         if not potential[0].isdigit() or not potential[1].isdigit():
             continue
