@@ -86,26 +86,61 @@ def star2(data):
                 start = (i,j)
             if data[i][j] == '#':
                 obstacles.append((i,j))
+    new_start = start
     direction = (-1,0)
+
     path_set.add((start, direction))
-    
+    new_path_set = set()
+    total = 0
+    i = 0
+    guessed = set()
     while not at_edge(start, width, height):
-        next_pos = (start[0] + direction[0], start[1] + direction[1])
-
-        if line_of_sight_has_visited(start, rotate_right(direction), path_set, obstacles, width, height):
-            # print(next_pos)
-            loop_possibility.add(next_pos)
-
+        next_pos = get_next_pos(start, direction)
+        if next_pos not in guessed:
+            guessed.add(next_pos)
+            temp_obstacles = obstacles + [next_pos]
+            if has_loop(start, direction, new_path_set, temp_obstacles, width, height):
+                total += 1
         while next_pos in obstacles:
             direction = rotate_right(direction)
-            next_pos = (start[0] + direction[0], start[1] + direction[1])
-            if line_of_sight_has_visited(start, rotate_right(direction), path_set, obstacles, width, height):
-                # print(next_pos)
-                loop_possibility.add(get_next_pos(start, rotate_right(direction)))
+            next_pos = get_next_pos(start, direction)
+            if next_pos not in guessed:
+                guessed.add(next_pos)
+                temp_obstacles = obstacles + [next_pos]
+                if has_loop(start, direction, new_path_set, temp_obstacles, width, height):
+                    total += 1
+            #path_set.add((get_next_pos(start, direction),direction))
         start = next_pos
-        path_set.add((start, direction))
+        path_set.add(get_next_pos(start, direction))
+        print(i)
+        i+= 1
+    
+    #for i, pos in enumerate(path_set):
+    #    print(f'Is at {i=} out of {len(path_set)} which is {100*i/len(path_set):2f}')
+    #    start = new_start
+    #    direction = (-1,0)
+    #    temp_obstacles = obstacles + [pos]
+    #    new_path_set = ()
+    #    if has_loop(start, direction, new_path_set, temp_obstacles, width, height):
+    #        total += 1
+    
     print(loop_possibility)
-    return len(loop_possibility)
+    return total
+def has_loop(start, direction, path_set, temp_obstacles, width, height):
+    new_path_set = path_set.copy()
+    while not at_edge(start, width, height):
+        next_pos = get_next_pos(start, direction)
+        while next_pos in temp_obstacles:
+            direction = rotate_right(direction)
+            next_pos = get_next_pos(start, direction)
+        if (next_pos,direction) in new_path_set:
+            #print(pos, next_pos, direction)
+            return True
+        start = next_pos
+        new_path_set.add((start,direction))
+        #print(new_path_set)
+    return False
+
 
 def get_next_pos(start, direction):
     return (start[0] + direction[0], start[1] + direction[1])
