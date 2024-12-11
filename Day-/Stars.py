@@ -5,6 +5,7 @@ from aocd import submit
 from aocd.models import Puzzle
 import itertools
 import functools
+from collections import counter, deque
 
 def day_():
     year = int(os.getcwd().split('\\')[-2][-4:]) 
