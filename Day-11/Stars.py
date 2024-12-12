@@ -65,18 +65,14 @@ def star1(data):
     n = 25
     stones = blink(data, n)
 
-    total = 0
-    for number in stones.values():
-        total += number
+    total = sum([number for number in stones.values()])
     return total
 
 def star2(data):
     n = 75
     stones = blink(data, n)
 
-    total = 0
-    for number in stones.values():
-        total += number
+    total = sum([number for number in stones.values()])
     return total
 
 def blink(data, n):
@@ -95,7 +91,6 @@ def blink(data, n):
                 next_stones[str(int(stone)*2024)] += number
         stones = next_stones.copy()
     return stones
-
 
 def main():
     import cProfile
